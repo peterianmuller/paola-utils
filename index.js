@@ -31,3 +31,7 @@ exports.Salesforce = Salesforce;
 exports.GitHub = GitHub;
 exports.Learn = Learn;
 exports.Slack = Slack;
+=======
+exports.helloWorld = function() {
+  console.log('Hello World, I\'m Paola!');
+}
