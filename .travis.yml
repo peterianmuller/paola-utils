@@ -1,8 +1,10 @@
 language: node_js
-node_js:
-  - "node"
+node_js: "node"
 # services:
   # -
 cache:
   directories:
     - "node_modules"
+branches:
+  only:
+    - master
