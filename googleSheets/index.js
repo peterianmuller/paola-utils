@@ -4,9 +4,7 @@
 // ------------------------------
 
 // Read all rows from a Google Sheet
-exports.readAllRows = async () => {
-  return 'Reading all the rows! :P';
-};
+exports.readAllRows = async () => 'Reading all the rows! :P';
 
 // Read a single row from a Google Sheet
 exports.readRow = async () => {
