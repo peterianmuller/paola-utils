@@ -33,3 +33,9 @@ exports.getStudents = async () => {
     return error;
   }
 };
+
+// FUTURE GET FUNCTIONS //
+
+// get students by course start and course type
+// get students by precourse onboarding status
+// get a student by contact ID
