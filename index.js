@@ -20,7 +20,6 @@ const Slack = require('./slack');
 //
 //  ⁃ Write tests that verify success for each function
 //  ⁃ Write tests to verify successful handling of errors for each function
-//
 
 // TODO: Ultimately, we'll remove helloWorld. Just a test to make sure the NPM module is working :)
 exports.helloWorld = () => 'Hello World, I\'m Paola!';

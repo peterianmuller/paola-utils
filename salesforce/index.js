@@ -1,7 +1,7 @@
 require('dotenv').config();
 const jsforce = require('jsforce');
-
 const { QUERY_SELECT, QUERY_WHERE, DATA_REFORMAT } = require('./query-mapping');
+
 const conn = new jsforce.Connection({ loginUrl: process.env.SFDC_LOGIN_URL });
 
 // ------------------------------
