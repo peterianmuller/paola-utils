@@ -11,21 +11,27 @@ AND Course_Type__c LIKE '%${courseType}%'`;
 
 const TEST_COURSE_START = '2020-05-11';
 const TEST_COURSE_TYPE = '12 Week';
+let studentData = [];
+
+beforeAll(async () => {
+  await conn.login(
+    process.env.SFDC_USERNAME,
+    process.env.SFDC_PASSWORD,
+    (err, userInfo) => userInfo,
+  );
+  return conn.sobject('Opportunity')
+    .select(SFDC_SELECT_QUERY)
+    .where(generateWhereClause(TEST_COURSE_START, TEST_COURSE_TYPE))
+    .orderby('CreatedDate', 'DESC')
+    .execute((err, res) => {
+      studentData = res;
+    });
+});
 
 describe('getStudents', () => {
   test('Should return the expected length of array', async () => {
-    await conn.login(
-      process.env.SFDC_USERNAME,
-      process.env.SFDC_PASSWORD,
-      (err, userInfo) => userInfo,
-    );
-    const studentCount = await conn.sobject('Opportunity')
-      .select(SFDC_SELECT_QUERY)
-      .where(generateWhereClause(TEST_COURSE_START, TEST_COURSE_TYPE))
-      .orderby('CreatedDate', 'DESC')
-      .execute((err, res) => res);
     const students = await getStudents(TEST_COURSE_START, TEST_COURSE_TYPE);
-    expect(students).toHaveLength(studentCount.length);
+    expect(students).toHaveLength(studentData.length);
   });
 
   test('Should return an array of objects with correct keys', async () => {
