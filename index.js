@@ -7,6 +7,8 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
+GGroups.addGroupMember()
+
 // ------------------------------
 // API Integrations
 // ------------------------------
