@@ -1,14 +1,8 @@
 require('dotenv').config();
 const jsforce = require('jsforce');
+const { SFDC_OPPTY_RECORD_ID, SFDC_SELECT_QUERY } = require('../constants');
 
 const conn = new jsforce.Connection({ loginUrl: process.env.SFDC_LOGIN_URL });
-const SFDC_OPPTY_RECORD_ID = '012j0000000qVAP';
-const QUERY_SELECT = `Id, Student__c, Student__r.Name,
-Student__r.Email, Student__r.Secondary_Email__c, Campus_Formatted__c,
-Student__r.Github_Username__c, Course_Start_Date_Actual__c, Product_Code__c,
-StageName, Separation_Status__c, Separation_Type__c`;
-
-// ------------------------------
 // Salesforce API Integrations
 // ------------------------------
 
@@ -55,13 +49,12 @@ exports.getStudents = async (courseStart, courseType) => {
   try {
     await login();
     return await conn.sobject('Opportunity')
-      .select(QUERY_SELECT)
+      .select(SFDC_SELECT_QUERY)
       .where(generateWhereClause(courseStart, courseType))
       .orderby('CreatedDate', 'DESC')
       .execute((err, res) => {
         if (err) throw new Error('SALESFORCE ERROR', err);
         const formattedStudentData = formatStudents(res);
-        console.log(formattedStudentData);
         return formattedStudentData;
       });
   } catch (error) {
