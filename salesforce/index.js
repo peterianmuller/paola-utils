@@ -14,19 +14,22 @@ StageName, Separation_Status__c, Separation_Type__c`;
 
 const login = async () => {
   try {
-    return await conn.login(process.env.SFDC_USERNAME, process.env.SFDC_PASSWORD,
-      (err, userInfo) => userInfo);
+    return await conn.login(
+      process.env.SFDC_USERNAME,
+      process.env.SFDC_PASSWORD,
+      (err, userInfo) => userInfo,
+    );
   } catch (error) {
     return error;
   }
 };
 
-const queryWhere = (courseStart, courseType) => `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
+const generateWhereClause = (courseStart, courseType) => `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
 AND Course_Product__c = 'Web Development'
 AND Course_Start_Date_Actual__c = ${courseStart}
 AND Course_Type__c LIKE '%${courseType}%'`;
 
-const reformatData = (ogData) => {
+const formatStudents = (ogData) => {
   const students = ogData.map((s) => {
     const contact = s.Student__r || {};
     const newStudent = {};
@@ -53,11 +56,11 @@ exports.getStudents = async (courseStart, courseType) => {
     await login();
     return await conn.sobject('Opportunity')
       .select(QUERY_SELECT)
-      .where(queryWhere(courseStart, courseType))
+      .where(generateWhereClause(courseStart, courseType))
       .orderby('CreatedDate', 'DESC')
       .execute((err, res) => {
         if (err) throw new Error('SALESFORCE ERROR', err);
-        const formattedStudentData = reformatData(res);
+        const formattedStudentData = formatStudents(res);
         console.log(formattedStudentData);
         return formattedStudentData;
       });

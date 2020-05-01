@@ -8,21 +8,24 @@ const SFDC_OPPTY_RECORD_ID = '012j0000000qVAP';
 
 const conn = new jsforce.Connection({ loginUrl: process.env.SFDC_LOGIN_URL });
 
-const queryWhere = (courseStart, courseType) => `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
-AND Course_Product__c = 'Web Development'
+const generateWhereClause = (courseStart, courseType) => `RecordTypeId =
+'${SFDC_OPPTY_RECORD_ID}' AND Course_Product__c = 'Web Development'
 AND Course_Start_Date_Actual__c = ${courseStart}
 AND Course_Type__c LIKE '%${courseType}%'`;
 
 describe('getStudents', () => {
   test('Should return the expected length of array', async () => {
-    await conn.login(process.env.SFDC_USERNAME, process.env.SFDC_PASSWORD,
-      (err, userInfo) => userInfo);
+    await conn.login(
+      process.env.SFDC_USERNAME,
+      process.env.SFDC_PASSWORD,
+      (err, userInfo) => userInfo,
+    );
     const studentCount = await conn.sobject('Opportunity')
       .select(`Id, Student__c, Student__r.Name,
       Student__r.Email, Student__r.Secondary_Email__c, Campus_Formatted__c,
       Student__r.Github_Username__c, Course_Start_Date_Actual__c, Product_Code__c,
       StageName, Separation_Status__c, Separation_Type__c`)
-      .where(queryWhere)
+      .where(generateWhereClause)
       .orderby('CreatedDate', 'DESC')
       .execute((err, res) => res);
     const students = await getStudents();
