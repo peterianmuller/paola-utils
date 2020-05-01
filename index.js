@@ -7,6 +7,8 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
+Salesforce.getStudents('2020-05-11', '12 Week');
+
 // ------------------------------
 // API Integrations
 // ------------------------------
