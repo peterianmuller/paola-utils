@@ -8,26 +8,32 @@ const key = require('../../google/credential.json');
 const scopes = 'https://www.googleapis.com/auth/admin.directory.group';
 const jwt = new google.auth.JWT(key.client_email, null, key.private_key, scopes, 'paola@paolaprecourse.com');
 
-// Write a student to a group
+const auth = async () => {
+  await jwt.authorize((err, token) => {
+    if (err) return err;
+    return token;
+  });
+};
+
+// Get the group
 exports.getGroup = async () => {
   try {
-    await jwt.authorize((err, token) => {
-      if (err) return err;
-      return token;
-    });
+    await auth();
     const service = await google.admin({ version: 'directory_v1', auth: jwt });
     service.groups.get({
       groupKey: 'paola-precourse@paolaprecourse.com',
     }, (err, res) => {
       if (err) return console.error('The API returned an error:', err.message);
-      console.log('res', res.data);
       return res.data;
     });
   } catch (error) {
-    console.log(error);
     return error;
   }
   return 'yay!';
+};
+
+exports.addGroupMember = async () => {
+
 };
 
 // Delete a student from a group
