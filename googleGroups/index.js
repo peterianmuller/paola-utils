@@ -3,19 +3,26 @@
 // Google Groups API Integrations
 // ------------------------------
 const { google } = require('googleapis');
-const key = require('../../google/admin_sdk_client_secret.json');
+const key = require('../../google/credential.json');
 
 const scopes = 'https://www.googleapis.com/auth/admin.directory.group';
-const jwt = new google.auth.JWT(key.client_email, null, key.private_key, scopes);
+const jwt = new google.auth.JWT(key.client_email, null, key.private_key, scopes, 'paola@paolaprecourse.com');
 
 // Write a student to a group
-exports.addGroupMember = async () => {
+exports.getGroup = async () => {
   try {
-    await jwt.authorize((err, tokens) => {
-      if (err) return;
-      console.log('Successfully connected!');
+    await jwt.authorize((err, token) => {
+      if (err) return err;
+      return token;
     });
-    await listUsers(jwt);
+    const service = await google.admin({ version: 'directory_v1', auth: jwt });
+    service.groups.get({
+      groupKey: 'paola-precourse@paolaprecourse.com',
+    }, (err, res) => {
+      if (err) return console.error('The API returned an error:', err.message);
+      console.log('res', res.data);
+      return res.data;
+    });
   } catch (error) {
     console.log(error);
     return error;
@@ -26,11 +33,11 @@ exports.addGroupMember = async () => {
 const listUsers = async (auth) => {
   const service = await google.admin({ version: 'directory_v1', auth });
   service.groups.get({
-    groupKey: 'paola-sandbox@galvanize.com',
+    groupKey: 'paola-precourse@paolaprecourse.com',
   }, (err, res) => {
     if (err) return console.error('The API returned an error:', err.message);
-    console.log('res', res);
-    return 'wahooooo!';
+    console.log('res', res.data);
+    return res.data;
   });
 };
 
