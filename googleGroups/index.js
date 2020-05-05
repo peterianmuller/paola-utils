@@ -19,15 +19,15 @@ const auth = async () => {
 exports.getAllGroupMembers = async (groupId) => {
   try {
     await auth();
-    const service = await google.admin({ version: 'directory_v1', auth: jwt });
-    service.members.list({
+    const service = await google.admin(
+      { version: 'directory_v1', auth: jwt },
+    );
+    const res = await service.members.list({
       groupKey: groupId,
-    }, (err, res) => {
-      if (err) return console.error('The API returned an error:', err.message);
-      return res.data.members;
     });
+    return res.data.members;
   } catch (error) {
-    return error;
+    return error.message;
   }
 };
 
@@ -39,7 +39,7 @@ exports.addGroupMember = async (groupId, userEmail) => {
       groupKey: groupId,
       resource: { email: userEmail },
     }, (err, res) => {
-      if (err) return console.error('The API returned an error:', err.message);
+      if (err) return console.error('Error:', err.message);
       return res.data;
     });
   } catch (error) {
@@ -56,7 +56,7 @@ exports.removeGroupMember = async (groupId, userEmail) => {
       groupKey: groupId,
       memberKey: userEmail,
     }, (err, res) => {
-      if (err) return console.error('The API returned an error:', err.message);
+      if (err) return console.error('Error:', err.message);
       return res.status === 204;
     });
   } catch (error) {
