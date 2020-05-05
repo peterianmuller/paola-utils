@@ -18,31 +18,30 @@ const login = async () => {
   }
 };
 
-const generateWhereClause = (courseStart, courseType) => `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
+exports.generateWhereClause = (courseStart, courseType) => `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
 AND Course_Product__c = 'Web Development'
 AND Course_Start_Date_Actual__c = ${courseStart}
 AND Course_Type__c LIKE '%${courseType}%'`;
 
-const formatStudents = (ogData) => {
-  const students = ogData.map((s) => {
-    const contact = s.Student__r || {};
-    const newStudent = {};
-    newStudent.fullName = contact.Name;
-    newStudent.email = contact.Email;
-    newStudent.emailSecondary = contact.Secondary_Email__c;
-    newStudent.campus = s.Campus_Formatted__c;
-    newStudent.github = contact.Github_Username__c;
-    newStudent.courseStartDate = s.Course_Start_Date_Actual__c;
-    newStudent.productCode = s.Product_Code__c;
-    newStudent.stage = s.StageName;
-    newStudent.separationStatus = s.Separation_Status__c;
-    newStudent.separationType = s.Separation_Type__c;
-    newStudent.sfdcContactId = s.Student__c;
-    newStudent.sfdcOpportunityId = s.Id;
-
-    return newStudent;
+const formatStudents = (students) => {
+  const formattedStudents = students.map((student) => {
+    const contact = student.Student__r || {};
+    return {
+      fullName: contact.Name,
+      email: contact.Email,
+      emailSecondary: contact.Secondary_Email__c,
+      campus: student.Campus_Formatted__c,
+      github: contact.Github_Username__c,
+      courseStartDate: student.Course_Start_Date_Actual__c,
+      productCode: student.Product_Code__c,
+      stage: student.StageName,
+      separationStatus: student.Separation_Status__c,
+      separationType: student.Separation_Type__c,
+      sfdcContactId: student.Student__c,
+      sfdcOpportunityId: student.Id,
+    };
   });
-  return students;
+  return formattedStudents;
 };
 
 exports.getStudents = async (courseStart, courseType) => {
@@ -50,12 +49,12 @@ exports.getStudents = async (courseStart, courseType) => {
     await login();
     return await conn.sobject('Opportunity')
       .select(SFDC_SELECT_QUERY)
-      .where(generateWhereClause(courseStart, courseType))
+      .where(exports.generateWhereClause(courseStart, courseType))
       .orderby('CreatedDate', 'DESC')
       .execute((err, res) => {
         if (err) throw new Error('SALESFORCE ERROR', err);
-        const formattedStudentData = formatStudents(res);
-        return formattedStudentData;
+        const formattedStudents = formatStudents(res);
+        return formattedStudents;
       });
   } catch (error) {
     return error;
