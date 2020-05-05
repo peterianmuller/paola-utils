@@ -3,10 +3,10 @@
 // Google Groups API Integrations
 // ------------------------------
 const { google } = require('googleapis');
-const key = require('../../google/credential.json');
+const key = require('../../google/admin_sdk_client_secret.json');
 
 const scopes = ['https://www.googleapis.com/auth/admin.directory.group'];
-const jwt = new google.auth.JWT(key.client_email, null, key.private_key, scopes, 'paola@paolaprecourse.com');
+const jwt = new google.auth.JWT(key.client_email, null, key.private_key, scopes, 'storage@galvanize.com');
 
 const auth = async () => {
   await jwt.authorize((err, token) => {
@@ -25,8 +25,10 @@ exports.getAllGroupMembers = async (groupId) => {
     const res = await service.members.list({
       groupKey: groupId,
     });
+    console.log(res.data);
     return res.data.members;
   } catch (error) {
+    console.log(error);
     return error.message;
   }
 };
