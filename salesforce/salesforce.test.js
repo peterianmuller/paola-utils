@@ -1,11 +1,11 @@
 require('dotenv').config();
 const jsforce = require('jsforce');
-const { SFDC_SELECT_QUERY } = require('../constants');
+const { SFDC_SELECT_QUERY, SFDC_OPPTY_RECORD_ID } = require('../constants');
 const { getStudents } = require('.');
 
 const TEST_COURSE_START = '2020-05-11';
 const TEST_COURSE_TYPE = '12 Week';
-const SFDC_WHERE_QUERY = `RecordTypeId = '012j0000000qVAP'
+const SFDC_WHERE_QUERY = `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
 AND Course_Product__c = 'Web Development'
 AND Course_Start_Date_Actual__c = ${TEST_COURSE_START}
 AND Course_Type__c LIKE '%${TEST_COURSE_TYPE}%'`;
