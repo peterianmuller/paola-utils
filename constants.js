@@ -1,7 +1,9 @@
-// hackreactor org name
-const GITHUB_ORG_NAME = "hackreactor";
-
 module.exports = {
- GITHUB_API_USERS: "https://api.github.com/users",
- GITHUB_API_TEAMS: `https://api.github.com/orgs/${GITHUB_ORG_NAME}/teams`
-}
+  GITHUB_API_USERS: 'https://api.github.com/users',
+  GITHUB_API_TEAMS: 'https://api.github.com/orgs/hackreactor/teams',
+  SFDC_OPPTY_RECORD_ID: '012j0000000qVAP',
+  SFDC_SELECT_QUERY: `Id, Student__c, Student__r.Name,
+  Student__r.Email, Student__r.Secondary_Email__c, Campus_Formatted__c,
+  Student__r.Github_Username__c, Course_Start_Date_Actual__c, Product_Code__c,
+  StageName, Separation_Status__c, Separation_Type__c`,
+};
