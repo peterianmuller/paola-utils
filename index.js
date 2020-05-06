@@ -7,8 +7,6 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
-GGroups.removeGroupMember('paola-sandbox@galvanize.com', 'admfdasfdsafdasfdsadin@gmail.com');
-
 // ------------------------------
 // API Integrations
 // ------------------------------

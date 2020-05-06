@@ -26,12 +26,14 @@ exports.getAllGroupMembers = async (groupId) => {
     const res = await service.members.list({
       groupKey: groupId,
     });
+    if (!res.data.members) return [];
     return res.data.members;
   } catch (error) {
     return error.message;
   }
 };
 
+// Add a student to a group
 exports.addGroupMember = async (groupId, userEmail) => {
   try {
     const service = await auth();
@@ -55,11 +57,24 @@ exports.removeGroupMember = async (groupId, userEmail) => {
     });
     return res.status === 204;
   } catch (error) {
-    return error;
+    return error.message;
   }
 };
 
 // Delete all students from a group
-exports.removeAllGroupMembers = async () => {
-
+exports.removeAllGroupMembers = async (groupId) => {
+  try {
+    const service = await auth();
+    const members = await exports.getAllGroupMembers(groupId);
+    if (typeof members === 'string') throw new Error(members);
+    await members.forEach((user) => {
+      service.members.delete({
+        groupKey: groupId,
+        memberKey: user.email,
+      });
+    });
+    return true;
+  } catch (error) {
+    return error.message;
+  }
 };
