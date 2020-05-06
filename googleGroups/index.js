@@ -13,15 +13,16 @@ const auth = async () => {
     if (err) return err;
     return token;
   });
+
+  return google.admin(
+    { version: 'directory_v1', auth: jwt },
+  );
 };
 
 // Read all members in a group
 exports.getAllGroupMembers = async (groupId) => {
   try {
-    await auth();
-    const service = await google.admin(
-      { version: 'directory_v1', auth: jwt },
-    );
+    const service = await auth();
     const res = await service.members.list({
       groupKey: groupId,
     });
@@ -33,32 +34,26 @@ exports.getAllGroupMembers = async (groupId) => {
 
 exports.addGroupMember = async (groupId, userEmail) => {
   try {
-    await auth();
-    const service = await google.admin({ version: 'directory_v1', auth: jwt });
-    service.members.insert({
+    const service = await auth();
+    const res = await service.members.insert({
       groupKey: groupId,
       resource: { email: userEmail },
-    }, (err, res) => {
-      if (err) return console.error('Error:', err.message);
-      return res.data;
     });
+    return res.data && res.data.status === 'ACTIVE';
   } catch (error) {
-    return error;
+    return error.message;
   }
 };
 
 // Delete a student from a group
 exports.removeGroupMember = async (groupId, userEmail) => {
   try {
-    await auth();
-    const service = await google.admin({ version: 'directory_v1', auth: jwt });
-    service.members.delete({
+    const service = await auth();
+    const res = await service.members.delete({
       groupKey: groupId,
       memberKey: userEmail,
-    }, (err, res) => {
-      if (err) return console.error('Error:', err.message);
-      return res.status === 204;
     });
+    return res.status === 204;
   } catch (error) {
     return error;
   }
