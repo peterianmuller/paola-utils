@@ -6,4 +6,8 @@ module.exports = {
   Student__r.Email, Student__r.Secondary_Email__c, Campus_Formatted__c,
   Student__r.Github_Username__c, Course_Start_Date_Actual__c, Product_Code__c,
   StageName, Separation_Status__c, Separation_Type__c`,
+  SFDC_TEST_WHERE_QUERY: `RecordTypeId = '012j0000000qVAP'
+  AND Course_Product__c = 'Web Development'
+  AND Course_Start_Date_Actual__c = 2020-05-11
+  AND Course_Type__c LIKE '%12 Week%'`,
 };

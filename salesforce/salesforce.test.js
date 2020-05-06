@@ -1,7 +1,7 @@
 require('dotenv').config();
 const jsforce = require('jsforce');
-const { SFDC_SELECT_QUERY } = require('../constants');
-const { getStudents, generateWhereClause } = require('.');
+const { SFDC_SELECT_QUERY, SFDC_TEST_WHERE_QUERY } = require('../constants');
+const { getStudents } = require('.');
 
 const TEST_COURSE_START = '2020-05-11';
 const TEST_COURSE_TYPE = '12 Week';
@@ -16,7 +16,7 @@ beforeAll(async () => {
   );
   return conn.sobject('Opportunity')
     .select(SFDC_SELECT_QUERY)
-    .where(generateWhereClause(TEST_COURSE_START, TEST_COURSE_TYPE))
+    .where(SFDC_TEST_WHERE_QUERY)
     .orderby('CreatedDate', 'DESC')
     .execute((err, res) => {
       studentData = res;
@@ -42,7 +42,8 @@ describe('getStudents', () => {
       'separationStatus',
       'separationType',
       'sfdcContactId',
-      'sfdcOpportunityId'];
+      'sfdcOpportunityId',
+    ];
     const students = await getStudents(TEST_COURSE_START, TEST_COURSE_TYPE);
     const actualProps = Object.keys(students[0]);
     expect(actualProps).toEqual(expectedProps);

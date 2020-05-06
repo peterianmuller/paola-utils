@@ -18,7 +18,7 @@ const login = async () => {
   }
 };
 
-exports.generateWhereClause = (courseStart, courseType) => `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
+const generateWhereClause = (courseStart, courseType) => `RecordTypeId = '${SFDC_OPPTY_RECORD_ID}'
 AND Course_Product__c = 'Web Development'
 AND Course_Start_Date_Actual__c = ${courseStart}
 AND Course_Type__c LIKE '%${courseType}%'`;
@@ -49,7 +49,7 @@ exports.getStudents = async (courseStart, courseType) => {
     await login();
     return await conn.sobject('Opportunity')
       .select(SFDC_SELECT_QUERY)
-      .where(exports.generateWhereClause(courseStart, courseType))
+      .where(generateWhereClause(courseStart, courseType))
       .orderby('CreatedDate', 'DESC')
       .execute((err, res) => {
         if (err) throw new Error('SALESFORCE ERROR', err);
