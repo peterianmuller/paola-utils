@@ -1,11 +1,12 @@
 require('dotenv').config();
+const { google } = require('googleapis');
+
 const {
   getAllGroupMembers,
   addGroupMember,
   removeGroupMember,
 } = require('.');
 
-const { google } = require('googleapis');
 const key = require('../../google/admin_sdk_client_secret.json');
 
 const scopes = ['https://www.googleapis.com/auth/admin.directory.group'];
