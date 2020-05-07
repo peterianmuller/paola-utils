@@ -1,4 +1,3 @@
-// const { GOOGLE_GROUPS_API_KEY } = require('./config.js');
 // ------------------------------
 // Google Groups API Integrations
 // ------------------------------
