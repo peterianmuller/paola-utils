@@ -62,17 +62,22 @@ exports.sendEmail = async () => {
 exports.sendEmailFromDraft = async () => {
   try {
     const service = await auth();
+
+    // get list of drafts with query keyword
     const allDrafts = await service.users.drafts.list({
       userId: 'me',
       q: 'subject:precourse deadlines',
     });
     if (allDrafts.data.drafts.length > 1) throw new Error('More than one email draft found! Please refine your query.');
 
+    // get message content for draft with id from allDrafts
     const draft = await service.users.drafts.get({
       userId: 'me',
       id: allDrafts.data.drafts[0].id,
       format: 'full',
     });
+
+    // parse draft subject and body and merge fields
     const { headers } = draft.data.message.payload;
     const subject = headers.find((item) => item.name === 'Subject').value;
     const utf8Subject = `=?utf-8?B?${subject}?=`;
@@ -101,6 +106,8 @@ exports.sendEmailFromDraft = async () => {
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '');
+
+    // send email
     const sendEmail = await service.users.messages.send({
       userId: 'me',
       requestBody: {
