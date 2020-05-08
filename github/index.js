@@ -67,7 +67,9 @@ exports.batchAddUserstoTeam = async (usernames, team) => {
         `${GITHUB_API_TEAMS}/${team}/memberships/${username}`,
         { method: 'PUT', headers },
       );
-      if (addUser.status !== 200) throw new Error(`Error adding ${username}`);
+      if (addUser.status !== 200) {
+        throw new Error(`Error removing ${username}`);
+      }
       return addUser.status;
     });
     const result = await Promise.all(promises);
@@ -85,7 +87,9 @@ exports.batchRemoveUsersFromTeam = async (usernames, team) => {
         `${GITHUB_API_TEAMS}/${team}/memberships/${username}`,
         { method: 'DELETE', headers },
       );
-      if (removeUser.status !== 204) throw new Error(`Error removing ${username}`);
+      if (removeUser.status !== 204) {
+        throw new Error(`Error removing ${username}`);
+      }
       return removeUser;
     });
     const result = await Promise.all(promises);
