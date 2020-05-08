@@ -68,7 +68,7 @@ exports.batchAddUserstoTeam = async (usernames, team) => {
         { method: 'PUT', headers },
       );
       if (addUser.status !== 200) {
-        throw new Error(`Error removing ${username}`);
+        throw new Error(`Error adding ${username}`);
       }
       return addUser.status;
     });
@@ -90,7 +90,7 @@ exports.batchRemoveUsersFromTeam = async (usernames, team) => {
       if (removeUser.status !== 204) {
         throw new Error(`Error removing ${username}`);
       }
-      return removeUser;
+      return removeUser.status;
     });
     const result = await Promise.all(promises);
     return result.every((status) => status === 204);

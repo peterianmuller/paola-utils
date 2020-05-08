@@ -99,3 +99,15 @@ describe('batchAddUserstoTeam', () => {
     expect(removed).toContain('Error adding');
   });
 });
+
+describe('batchRemoveUsersFromTeam', () => {
+  test('Should return true if successfully removed all users', async () => {
+    const removed = await batchRemoveUsersFromTeam(['anthonypecchillo', 'murphgrainger'], GITHUB_TEAM_USERNAME);
+    expect(removed).toBe(true);
+  });
+
+  test('Should return errror if a user could not be removed', async () => {
+    const removed = await batchRemoveUsersFromTeam(['anthonypecchillo', 'murphgrainger***'], GITHUB_TEAM_USERNAME);
+    expect(removed).toContain('Error removing');
+  });
+});

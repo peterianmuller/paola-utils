@@ -7,8 +7,6 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
-
-GitHub.batchAddUserstoTeam(['anthonypecchillo', 'murphgrainger'], 'paola-test-team')
 // GitHub.batchRemoveUsersFromTeam(['anthonypecchillo', 'murphgrainger'], 'paola-test-team')
 
 // ------------------------------
