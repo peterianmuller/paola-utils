@@ -6,6 +6,8 @@ const {
   isUserOnTeam,
   addUserToTeam,
   removeUserFromTeam,
+  batchAddUserstoTeam,
+  batchRemoveUsersFromTeam,
 } = require('.');
 
 const GITHUB_TEAM_USERNAME = 'paola-test-team';
@@ -83,5 +85,17 @@ describe('removeUserFromTeam', () => {
   test('Should return false if user is invalid', async () => {
     const removed = await removeUserFromTeam(GITHUB_INVALID_USER, GITHUB_TEAM_USERNAME);
     expect(removed).toBe(false);
+  });
+});
+
+describe('batchAddUserstoTeam', () => {
+  test('Should return true if successfully added all usernames', async () => {
+    const removed = await batchAddUserstoTeam(['anthonypecchillo', 'murphgrainger'], GITHUB_TEAM_USERNAME);
+    expect(removed).toBe(true);
+  });
+
+  test('Should return errror if a user could not be added', async () => {
+    const removed = await batchAddUserstoTeam(['anthonypecchillo', 'murphgrainger***'], GITHUB_TEAM_USERNAME);
+    expect(removed).toContain('Error adding');
   });
 });
