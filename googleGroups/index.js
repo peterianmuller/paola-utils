@@ -2,10 +2,9 @@
 // Google Groups API Integrations
 // ------------------------------
 const { google } = require('googleapis');
-const key = require('../../google/admin_sdk_client_secret.json');
 
 const scopes = ['https://www.googleapis.com/auth/admin.directory.group'];
-const jwt = new google.auth.JWT(key.client_email, null, key.private_key, scopes, 'paola@galvanize.com');
+const jwt = new google.auth.JWT(process.env.GOOGLE_ADMIN_CLIENT_EMAIL, null, process.env.GOOGLE_ADMIN_CLIENT_KEY, scopes, 'paola@galvanize.com');
 
 const auth = async () => {
   await jwt.authorize((err, token) => {
