@@ -6,8 +6,8 @@ const {
   isUserOnTeam,
   addUserToTeam,
   removeUserFromTeam,
-  batchAddUserstoTeam,
-  batchRemoveUsersFromTeam,
+  addUsersToTeam,
+  removeUsersFromTeam,
 } = require('.');
 
 const GITHUB_TEAM_USERNAME = 'paola-test-team';
@@ -78,36 +78,36 @@ describe('addUserToTeam', () => {
 
 describe('removeUserFromTeam', () => {
   test('Should return true if successfully removed user', async () => {
-    const removed = await removeUserFromTeam(GITHUB_TEST_USER, GITHUB_TEAM_USERNAME);
-    expect(removed).toBe(true);
+    const removedUser = await removeUserFromTeam(GITHUB_TEST_USER, GITHUB_TEAM_USERNAME);
+    expect(removedUser).toBe(true);
   });
 
   test('Should return false if user is invalid', async () => {
-    const removed = await removeUserFromTeam(GITHUB_INVALID_USER, GITHUB_TEAM_USERNAME);
-    expect(removed).toBe(false);
+    const removedUser = await removeUserFromTeam(GITHUB_INVALID_USER, GITHUB_TEAM_USERNAME);
+    expect(removedUser).toBe(false);
   });
 });
 
-describe('batchAddUserstoTeam', () => {
-  test('Should return true if successfully added all usernames', async () => {
-    const removed = await batchAddUserstoTeam(['anthonypecchillo', 'murphgrainger'], GITHUB_TEAM_USERNAME);
-    expect(removed).toBe(true);
+describe('addUsersToTeam', () => {
+  test('Should return true if all GitHub users are successfully added to the GitHub team', async () => {
+    const usersWereAdded = await addUsersToTeam(['anthonypecchillo', 'murphgrainger'], GITHUB_TEAM_USERNAME);
+    expect(usersWereAdded).toBe(true);
   });
 
-  test('Should return errror if a user could not be added', async () => {
-    const removed = await batchAddUserstoTeam(['anthonypecchillo', 'murphgrainger***'], GITHUB_TEAM_USERNAME);
-    expect(removed).toContain('Error adding');
+  test('Should return an errror if at least one user could not be added', async () => {
+    const usersWereAdded = await addUsersToTeam(['anthonypecchillo', 'murphgrainger***'], GITHUB_TEAM_USERNAME);
+    expect(usersWereAdded).toContain('Error adding');
   });
 });
 
-describe('batchRemoveUsersFromTeam', () => {
-  test('Should return true if successfully removed all users', async () => {
-    const removed = await batchRemoveUsersFromTeam(['anthonypecchillo', 'murphgrainger'], GITHUB_TEAM_USERNAME);
-    expect(removed).toBe(true);
+describe('removeUsersFromTeam', () => {
+  test('Should return true if all GitHub users are successfully removed from the GitHub team', async () => {
+    const usersWereRemoved = await removeUsersFromTeam(['anthonypecchillo', 'murphgrainger'], GITHUB_TEAM_USERNAME);
+    expect(usersWereRemoved).toBe(true);
   });
 
-  test('Should return errror if a user could not be removed', async () => {
-    const removed = await batchRemoveUsersFromTeam(['anthonypecchillo', 'murphgrainger***'], GITHUB_TEAM_USERNAME);
-    expect(removed).toContain('Error removing');
+  test('Should return an errror if at least one user could not be removed', async () => {
+    const usersWereRemoved = await removeUsersFromTeam(['anthonypecchillo', 'murphgrainger***'], GITHUB_TEAM_USERNAME);
+    expect(usersWereRemoved).toContain('Error removing');
   });
 });
