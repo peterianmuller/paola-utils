@@ -24,8 +24,7 @@ exports.getAllGroupMembers = async (groupId) => {
     const res = await service.members.list({
       groupKey: groupId,
     });
-    if (!res.data.members) return [];
-    return res.data.members;
+    return res.data.members || [];
   } catch (error) {
     return error.message;
   }

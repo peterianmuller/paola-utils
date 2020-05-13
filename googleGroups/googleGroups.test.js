@@ -24,6 +24,7 @@ const authenticate = async () => {
   );
 };
 
+// Clear out all group members before testing
 beforeAll(async () => {
   const service = await authenticate();
   const response = await service.members.list({
@@ -64,6 +65,8 @@ describe('getAllGroupMembers', () => {
     await addUser();
     const members = await getAllGroupMembers(GOOGLE_GROUP_ID);
     expect(members).toHaveLength(1);
+    expect(members[0]).toHaveProperty('email');
+    expect(members[0]).toHaveProperty('role');
   });
   test('Should return an error if group id does not exist', async () => {
     const members = await getAllGroupMembers('*****');
