@@ -7,8 +7,11 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
-GGroups.getGroup();
-
+const subjectQuery = 'precourse deadlines';
+const toList = ['paola@galvanize.com'];
+const ccList = ['murph.grainger@galvanize.com', 'paola@galvanize.com'];
+const bccList = [];
+GMail.sendEmailFromDraft(subjectQuery, toList, ccList, bccList);
 // ------------------------------
 // API Integrations
 // ------------------------------
