@@ -21,10 +21,10 @@ const authenticate = async () => {
 
 const populateMergeFields = (body, mergeFields) => {
   let mergedBody = body;
-  mergedBody = mergedBody.replace('{{name}}', 'Murph');
-  mergedBody = mergedBody.replace('{{section1-deadline}}', 'Jan 1, 2020 at 5pm');
-  mergedBody = mergedBody.replace('{{section2-deadline}}', 'July 4, 2021 at 12pm');
-  mergedBody = mergedBody.replace('{{section3-deadline}}', 'December 25, 2021 at 1am');
+  Object.entries(mergeFields).map((obj) => {
+    mergedBody = mergedBody.replace(`{{${obj[0]}}}`, `${obj[1]}`);
+    return mergedBody;
+  });
   return mergedBody;
 };
 
@@ -69,7 +69,7 @@ exports.sendEmail = async (body, subject, to, cc, bcc) => {
 };
 
 // Send an email ^like^this^ using a draft email template
-exports.sendEmailFromDraft = async (subjectQuery, toList, ccList, bccList) => {
+exports.sendEmailFromDraft = async (subjectQuery, toList, ccList, bccList, mergeFields) => {
   try {
     const service = await authenticate();
 
@@ -98,7 +98,9 @@ exports.sendEmailFromDraft = async (subjectQuery, toList, ccList, bccList) => {
     const subject = headers.find((item) => item.name === 'Subject').value;
     const { data } = draft.data.message.payload.parts[1].body;
     const body = Buffer.from(data, 'base64').toString('utf8');
-    const encodedEmail = generateEmail(body, subject, toList, ccList, bccList);
+    const encodedEmail = generateEmail(
+      body, subject, toList, ccList, bccList, mergeFields,
+    );
     // send email
     const res = await service.users.messages.send({
       userId: 'me',
@@ -106,10 +108,8 @@ exports.sendEmailFromDraft = async (subjectQuery, toList, ccList, bccList) => {
         raw: encodedEmail,
       },
     });
-    console.log(res);
     return res.status === 200;
   } catch (error) {
-    console.log(error);
     return error.message;
   }
 };
