@@ -7,17 +7,19 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
-const subjectQuery = 'precourse deadlines';
-const toList = ['paola@galvanize.com'];
-const ccList = ['murph.grainger@galvanize.com', 'paola@galvanize.com'];
-const bccList = [];
-const mergeFields = {
-  name: 'Murph',
-  deadline1: 'Nov 1, 2020',
-  deadline2: 'Nov 2, 2020',
-  deadline3: 'Nov 3, 2020',
-};
-GMail.sendEmailFromDraft(subjectQuery, toList, ccList, bccList, mergeFields);
+// const subjectQuery = 'precourse deadlines';
+// const toList = ['paola@galvanize.com'];
+// const ccList = ['murph.grainger@galvanize.com', 'paola@galvanize.com'];
+// const bccList = [];
+// const mergeFields = {
+//   name: 'Murph',
+//   deadline1: 'Nov 1, 2020',
+//   deadline2: 'Nov 2, 2020',
+//   deadline3: 'Nov 3, 2020',
+// };
+// GMail.sendEmailFromDraft(subjectQuery, toList, ccList, bccList, mergeFields);
+
+
 // ------------------------------
 // API Integrations
 // ------------------------------
