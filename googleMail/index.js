@@ -42,9 +42,15 @@ const getDraftBySubject = async (subjectQuery) => {
   return draft.data;
 };
 
+const validateMergeFields = (body, subject, mergeFields) => {
+  const requestedMergeFields = String(subject.concat(' ', body)).match(/[^{}]+(?=})/g);
+  const uniqueMergeFields = [...new Set(requestedMergeFields)];
+  const invalidFields = uniqueMergeFields.filter((prop) => !(prop in mergeFields));
+  if (invalidFields.length) throw new Error(`Invalid Merge Fields Provided. Missing fields: ${invalidFields.join(', ')}.`);
+};
+
 const populateMergeFields = (body, subject, mergeFields) => {
-  // TODO: error handle to make sure mergeFields params match what email expects
-  if (!mergeFields) return { body, subject };
+  validateMergeFields(body, subject, mergeFields);
   let mergedBody = body;
   let mergedSubject = subject;
   Object.entries(mergeFields).map((obj) => {
@@ -126,6 +132,7 @@ exports.sendEmailFromDraft = async (subjectQuery, toList, ccList, bccList, alias
     });
     return res.status === 200;
   } catch (error) {
+    console.log(error);
     return error.message;
   }
 };
