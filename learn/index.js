@@ -1,7 +1,10 @@
 const fetch = require('node-fetch');
 const { LEARN_API_COHORTS } = require('../constants');
 
-const headers = { Authorization: `Bearer ${process.env.LEARN_TOKEN}` };
+const headers = {
+  Authorization: `Bearer ${process.env.LEARN_TOKEN}`,
+  'Content-Type': 'application/json',
+};
 
 // ------------------------------
 // Learn API Integrations
@@ -33,8 +36,34 @@ exports.removeStudentFromCohort = async () => {
 };
 
 // Write a new cohort
-exports.createNewCohort = async () => {
+exports.createNewCohort = async (cohortObj) => {
+  try {
+    const response = await fetch(
+      `${LEARN_API_COHORTS}`,
+      { method: 'POST', body: JSON.stringify(cohortObj), headers },
+    );
+    const json = await response.json();
+    if (json.error) throw new Error(json.error);
+    console.log(response.status);
+    return response.status;
+  } catch (error) {
+    return error.message;
+  }
+};
 
+// Delete a new cohort
+exports.createNewCohort = async (cohortObj) => {
+  try {
+    const response = await fetch(
+      `${LEARN_API_COHORTS}`,
+      { method: 'POST', body: JSON.stringify(cohortObj), headers },
+    );
+    const json = await response.json();
+    if (json.error) throw new Error(json.error);
+    return response.status;
+  } catch (error) {
+    return error.message;
+  }
 };
 
 // TODO: Move this elsewhere! You can skip this one for now.

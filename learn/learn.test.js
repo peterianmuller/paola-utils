@@ -4,6 +4,7 @@ const { LEARN_API_COHORTS } = require('../constants');
 
 const {
   getAllStudentsInCohort,
+  createNewCohort,
 } = require('.');
 
 const headers = { Authorization: `Bearer ${process.env.LEARN_TOKEN}` };
@@ -29,3 +30,24 @@ describe('getAllStudentsInCohort', () => {
     expect(students).toBe('The requested resource could not be found');
   });
 });
+
+// Dont think we should create cohorts when testing then delete
+// describe('createNewCohort', () => {
+//   test('Should return a 200 status if successfull', async () => {
+//     const body = {
+//       name: 'Paola Test Cohort (FROM API TEST)',
+//       product_type: 'SEI Precourse',
+//       label: '20-06-SEI-PRE',
+//       campus_name: 'Remote',
+//       starts_on: '2020-10-10',
+//       ends_on: '2021-01-10',
+//     };
+//     const status = await createNewCohort(body);
+//     expect(status).toBe(200);
+//   });
+//
+//   test('Should return an error if the cohortId provided is invalid', async () => {
+//     const students = await createNewCohort(0);
+//     expect(students).toContain('Validation Error');
+//   });
+// });
