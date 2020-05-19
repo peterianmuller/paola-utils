@@ -20,14 +20,14 @@ const authenticate = async () => {
 };
 
 const getDraftBySubject = async (subjectQuery) => {
-  // get list of drafts with query keyword
+  // get draft from query keyword
   const service = await authenticate();
   const allDrafts = await service.users.drafts.list({
     userId: 'me',
     q: `subject:${subjectQuery}`,
   });
 
-  // query error handling
+  // method should error if exactly one draft was not returned
   if (!allDrafts.data.drafts) throw new Error('No draft found.');
   if (allDrafts.data.drafts.length > 1) {
     throw new Error('More than one draft found! Please refine query.');

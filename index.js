@@ -7,18 +7,18 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
-const subjectQuery = 'upcoming';
-const toList = ['murph.grainger@galvanize.com'];
-const ccList = [];
-const bccList = [];
-const mergeFields = {
-  name: 'Bob',
-  deadline: 'Nov 1, 2020',
-  part: '999',
-  days: '20',
-};
-const alias = { name: '', email: '' };
-GMail.sendEmailFromDraft(subjectQuery, toList, ccList, bccList, alias, mergeFields);
+// const subjectQuery = 'upcoming';
+// const toList = ['paola@galvanize.com'];
+// const ccList = [];
+// const bccList = [];
+// const mergeFields = {
+//   name: 'Bob',
+//   deadline: 'Nov 1, 2020',
+//   part: '999',
+//   days: '20',
+// };
+// const alias = { name: 'SEI Precourse', email: 'sei.precourse@galvanize.com' };
+// GMail.sendEmailFromDraft(subjectQuery, toList, ccList, bccList, alias, mergeFields);
 
 
 // GMail.sendEmailFromAlias('murph.grainger@galvanize.com');
