@@ -44,22 +44,6 @@ exports.createNewCohort = async (cohortObj) => {
     );
     const json = await response.json();
     if (json.error) throw new Error(json.error);
-    console.log(response.status);
-    return response.status;
-  } catch (error) {
-    return error.message;
-  }
-};
-
-// Delete a new cohort
-exports.createNewCohort = async (cohortObj) => {
-  try {
-    const response = await fetch(
-      `${LEARN_API_COHORTS}`,
-      { method: 'POST', body: JSON.stringify(cohortObj), headers },
-    );
-    const json = await response.json();
-    if (json.error) throw new Error(json.error);
     return response.status;
   } catch (error) {
     return error.message;
