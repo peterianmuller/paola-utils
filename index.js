@@ -8,16 +8,20 @@ const Learn = require('./learn');
 const Slack = require('./slack');
 
 // const subjectQuery = 'precourse deadlines';
-// const toList = ['paola@galvanize.com'];
-// const ccList = ['murph.grainger@galvanize.com', 'paola@galvanize.com'];
+// const toList = ['murph.grainger@galvanize.com'];
+// const ccList = [];
 // const bccList = [];
 // const mergeFields = {
-//   name: 'Murph',
+//   name: 'Bob',
 //   deadline1: 'Nov 1, 2020',
 //   deadline2: 'Nov 2, 2020',
 //   deadline3: 'Nov 3, 2020',
 // };
-// GMail.sendEmailFromDraft(subjectQuery, toList, ccList, bccList, mergeFields);
+// const alias = { name: '', email: '' };
+// GMail.sendEmailFromDraft(subjectQuery, toList, ccList, bccList, alias, mergeFields);
+//
+
+// GMail.sendEmailFromAlias('murph.grainger@galvanize.com');
 
 
 // ------------------------------
