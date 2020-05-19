@@ -1,11 +1,25 @@
-// const { LEARN_API_KEY } = require('./config.js');
+const fetch = require('node-fetch');
+const { LEARN_API_COHORTS } = require('../constants');
+
+const headers = { Authorization: `Bearer ${process.env.LEARN_TOKEN}` };
+
 // ------------------------------
 // Learn API Integrations
 // ------------------------------
 
 // Read all students in a cohort
-exports.getAllStudentsInCohort = async () => {
-
+exports.getAllStudentsInCohort = async (cohortId) => {
+  try {
+    const response = await fetch(
+      `${LEARN_API_COHORTS}/${cohortId}/users`,
+      { headers },
+    );
+    const json = await response.json();
+    if (json.message) throw new Error(json.message);
+    return json;
+  } catch (error) {
+    return error.message;
+  }
 };
 
 // Write a student to a cohort

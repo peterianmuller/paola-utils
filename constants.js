@@ -6,4 +6,5 @@ module.exports = {
   Student__r.Email, Student__r.Secondary_Email__c, Campus_Formatted__c,
   Student__r.Github_Username__c, Course_Start_Date_Actual__c, Product_Code__c,
   StageName, Separation_Status__c, Separation_Type__c`,
+  LEARN_API_COHORTS: ' https://learn-2.galvanize.com/api/v1/cohorts',
 };
