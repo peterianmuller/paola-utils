@@ -42,20 +42,23 @@ const getDraftBySubject = async (subjectQuery) => {
   return draft.data;
 };
 
-const populateMergeFields = (body, mergeFields) => {
-  if (!mergeFields) return body;
+const populateMergeFields = (body, subject, mergeFields) => {
+  // TODO: error handle to make sure mergeFields params match what email expects
+  if (!mergeFields) return { body, subject };
   let mergedBody = body;
+  let mergedSubject = subject;
   Object.entries(mergeFields).map((obj) => {
     mergedBody = mergedBody.replace(`{{${obj[0]}}}`, `${obj[1]}`);
-    return mergedBody;
+    mergedSubject = mergedSubject.replace(`{{${obj[0]}}}`, `${obj[1]}`);
+    return { mergedBody, mergedSubject };
   });
-  return mergedBody;
+  return { mergedBody, mergedSubject };
 };
 
 const generateEmail = (body, subject, toList, ccList, bccList, alias, mergeFields) => {
   const fromAlias = alias ? `From: ${alias.name} <${alias.email}>` : 'From:';
-  const mergedBody = populateMergeFields(body, mergeFields);
-  const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`;
+  const { mergedBody, mergedSubject } = populateMergeFields(body, subject, mergeFields);
+  const utf8Subject = `=?utf-8?B?${Buffer.from(mergedSubject).toString('base64')}?=`;
   const messageParts = [
     `To:  ${toList}`,
     `Cc:  ${ccList}`,
@@ -123,7 +126,6 @@ exports.sendEmailFromDraft = async (subjectQuery, toList, ccList, bccList, alias
     });
     return res.status === 200;
   } catch (error) {
-    console.log(error);
     return error.message;
   }
 };
