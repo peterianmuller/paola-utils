@@ -7,6 +7,8 @@ const GitHub = require('./github');
 const Learn = require('./learn');
 const Slack = require('./slack');
 
+Learn.getAllStudentsInCohort(0)
+
 // ------------------------------
 // API Integrations
 // ------------------------------

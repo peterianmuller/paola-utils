@@ -8,4 +8,5 @@ module.exports = {
   StageName, Separation_Status__c, Separation_Type__c, Separation_Reason__c,
   Last_Day_Of_Attendance__c, Last_Day_of_Attendance_Acronym__c,
   Official_Withdrawal_Date__c`,
+  LEARN_API_COHORTS: ' https://learn-2.galvanize.com/api/v1/cohorts',
 };
