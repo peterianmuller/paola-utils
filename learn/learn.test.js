@@ -11,7 +11,7 @@ const {
 } = require('.');
 
 const headers = { Authorization: `Bearer ${process.env.LEARN_TOKEN}` };
-const LEARN_COHORT_ID = 1997;
+const LEARN_COHORT_ID = 2024;
 const TEST_STUDENT = {
   first_name: 'Paola',
   last_name: 'Precourse',
@@ -25,6 +25,17 @@ const getStudents = async () => {
   );
   return response.json();
 };
+
+beforeAll(async () => {
+  const students = await getStudents();
+  const activeStudent = students.find((s) => s.email === TEST_STUDENT.email);
+  if (activeStudent) {
+    await fetch(
+      `${LEARN_API_COHORTS}/${LEARN_COHORT_ID}/users/${activeStudent.id}`,
+      { method: 'DELETE', headers },
+    );
+  }
+});
 
 describe('getAllStudentsInCohort', () => {
   test('Should expect an array of students', async () => {
