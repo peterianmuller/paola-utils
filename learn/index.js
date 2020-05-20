@@ -18,7 +18,7 @@ exports.getAllStudentsInCohort = async (cohortId) => {
       { headers },
     );
     const json = await response.json();
-    if (json.message) throw new Error(json.message);
+    if (json.error || json.message) throw new Error(json.error || json.message);
     return json;
   } catch (error) {
     return error.message;
@@ -26,13 +26,50 @@ exports.getAllStudentsInCohort = async (cohortId) => {
 };
 
 // Write a student to a cohort
-exports.addStudentToCohort = async () => {
+exports.addStudentToCohort = async (cohortId, student) => {
+  try {
+    const response = await fetch(
+      `${LEARN_API_COHORTS}/${cohortId}/users`,
+      { method: 'POST', body: JSON.stringify(student), headers },
+    );
+    const json = await response.json();
+    if (json.error || json.message) throw new Error(json.error || json.message);
+    return json.status;
+  } catch (error) {
+    return error.message;
+  }
+};
 
+// Validate that a student is enrolled in a cohort
+exports.validateStudentEnrollment = async (cohortId, email) => {
+  try {
+    const students = await exports.getAllStudentsInCohort(cohortId);
+    if (!Array.isArray(students)) throw new Error(students);
+    const activeStudent = students.find((s) => s.email === email);
+    if (!activeStudent) throw new Error('No active student found with provided email.');
+    return activeStudent;
+  } catch (error) {
+    return error.message;
+  }
 };
 
 // Delete a student from a cohort
-exports.removeStudentFromCohort = async () => {
-
+exports.removeStudentFromCohort = async (cohortId, email) => {
+  try {
+    const students = await exports.getAllStudentsInCohort(cohortId);
+    if (!Array.isArray(students)) throw new Error(students);
+    const activeStudent = students.find((s) => s.email === email);
+    if (!activeStudent) throw new Error('No active student found with provided email.');
+    const response = await fetch(
+      `${LEARN_API_COHORTS}/${cohortId}/users/${activeStudent.id}`,
+      { method: 'DELETE', headers },
+    );
+    const json = await response.json();
+    if (json.error || json.message) throw new Error(json.error || json.message);
+    return json.status;
+  } catch (error) {
+    return error.message;
+  }
 };
 
 // Write a new cohort
@@ -43,15 +80,9 @@ exports.createNewCohort = async (cohortObj) => {
       { method: 'POST', body: JSON.stringify(cohortObj), headers },
     );
     const json = await response.json();
-    if (json.error) throw new Error(json.error);
+    if (json.error || json.message) throw new Error(json.error || json.message);
     return response.status;
   } catch (error) {
     return error.message;
   }
-};
-
-// TODO: Move this elsewhere! You can skip this one for now.
-// Validate that a student is enrolled in a cohort
-exports.validateStudentEnrollment = async () => {
-
 };
