@@ -53,6 +53,19 @@ exports.validateStudentEnrollment = async (cohortId, email) => {
   }
 };
 
+// Validate that a student is enrolled in a cohort
+exports.validateStudentEnrollmentByID = async (cohortId, id) => {
+  try {
+    const students = await exports.getAllStudentsInCohort(cohortId);
+    if (!Array.isArray(students)) throw new Error(students);
+    const activeStudent = students.find((student) => student.id === id);
+    if (!activeStudent) throw new Error('No active student found with provided ID.');
+    return activeStudent;
+  } catch (error) {
+    return error.message;
+  }
+};
+
 // Delete a student from a cohort
 exports.removeStudentFromCohort = async (cohortId, email) => {
   try {
@@ -66,6 +79,23 @@ exports.removeStudentFromCohort = async (cohortId, email) => {
     );
     const json = await response.json();
     if (json.error || json.message) throw new Error(json.error || json.message);
+    return json.status;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+exports.removeStudentFromCohortByID = async (cohortId, id) => {
+  try {
+    const response = await fetch(
+      `${LEARN_API_COHORTS}/${cohortId}/users/${id}`,
+      { method: 'DELETE', headers },
+    );
+    const json = await response.json();
+    if (json.error || json.message || json.status === '404') {
+      throw new Error(json.error || json.message
+        || 'No active student found with provided ID.');
+    }
     return json.status;
   } catch (error) {
     return error.message;

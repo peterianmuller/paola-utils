@@ -4,18 +4,24 @@ const { LEARN_API_COHORTS } = require('../constants');
 
 const {
   getAllStudentsInCohort,
+  validateStudentEnrollment,
+  validateStudentEnrollmentByID,
   addStudentToCohort,
   removeStudentFromCohort,
+  removeStudentFromCohortByID,
   createNewCohort,
-  validateStudentEnrollment
 } = require('.');
 
-const headers = { Authorization: `Bearer ${process.env.LEARN_TOKEN}` };
 const TEST_LEARN_COHORT_ID = 2024;
 const TEST_STUDENT = {
+  id: 52763,
   first_name: 'Paola',
   last_name: 'Precourse',
   email: 'paola@galvanize.com',
+};
+const headers = {
+  Authorization: `Bearer ${process.env.LEARN_TOKEN}`,
+  'Content-Type': 'application/json',
 };
 
 const getStudents = async () => {
@@ -24,6 +30,15 @@ const getStudents = async () => {
     { headers },
   );
   return response.json();
+};
+
+const addStudent = async () => {
+  const response = await fetch(
+    `${LEARN_API_COHORTS}/${TEST_LEARN_COHORT_ID}/users`,
+    { method: 'POST', body: JSON.stringify(TEST_STUDENT), headers },
+  );
+  const json = await response.json();
+  return json;
 };
 
 beforeAll(async () => {
@@ -100,6 +115,32 @@ describe('validateStudentEnrollment', () => {
   });
 });
 
+describe('validateStudentEnrollmentByID', () => {
+  test('Should expect a student object if student is in cohort', async () => {
+    const expectedProps = [
+      'id',
+      'uid',
+      'first_name',
+      'last_name',
+      'email',
+      'roles',
+    ];
+    const student = await validateStudentEnrollmentByID(TEST_LEARN_COHORT_ID, TEST_STUDENT.id);
+    const actualProps = Object.keys(student);
+    expect(actualProps).toEqual(expectedProps);
+  });
+
+  test('Should expect an error if student is not found in cohort', async () => {
+    const status = await validateStudentEnrollmentByID(TEST_LEARN_COHORT_ID, 0);
+    expect(status).toBe('No active student found with provided ID.');
+  });
+
+  test('Should expect an error if the cohortId provided is invalid', async () => {
+    const status = await validateStudentEnrollmentByID(0, TEST_STUDENT.id);
+    expect(status).toBe('The requested resource could not be found');
+  });
+});
+
 describe('removeStudentFromCohort', () => {
   test('Should expect an ok status if successfully removed student from cohort', async () => {
     const status = await removeStudentFromCohort(TEST_LEARN_COHORT_ID, TEST_STUDENT.email);
@@ -113,6 +154,24 @@ describe('removeStudentFromCohort', () => {
 
   test('Should expect an error if the cohortId provided is invalid', async () => {
     const status = await removeStudentFromCohort(0, TEST_STUDENT.email);
+    expect(status).toBe('The requested resource could not be found');
+  });
+});
+
+describe('removeStudentFromCohortByID', () => {
+  test('Should expect an ok status if successfully removed student from cohort', async () => {
+    await addStudent();
+    const status = await removeStudentFromCohortByID(TEST_LEARN_COHORT_ID, TEST_STUDENT.id);
+    expect(status).toBe('ok');
+  });
+
+  test('Should expect an error if student is not found in cohort', async () => {
+    const status = await removeStudentFromCohortByID(TEST_LEARN_COHORT_ID, TEST_STUDENT.id);
+    expect(status).toBe('No active student found with provided ID.');
+  });
+
+  test('Should expect an error if the cohortId provided is invalid', async () => {
+    const status = await removeStudentFromCohortByID(0, TEST_STUDENT.id);
     expect(status).toBe('The requested resource could not be found');
   });
 });
