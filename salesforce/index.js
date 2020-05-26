@@ -37,6 +37,10 @@ const formatStudents = (students) => {
       stage: student.StageName,
       separationStatus: student.Separation_Status__c,
       separationType: student.Separation_Type__c,
+      separationReason: student.Separation_Reason__c,
+      lastDayOfAttendance: student.Last_Day_Of_Attendance__c,
+      lastDayOfAttendanceAcronym: student.Last_Day_of_Attendance_Acronym__c,
+      dateOfDetermination: student.Official_Withdrawal_Date__c,
       sfdcContactId: student.Student__c,
       sfdcOpportunityId: student.Id,
     };
