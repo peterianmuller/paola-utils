@@ -46,6 +46,10 @@ describe('getStudents', () => {
       'stage',
       'separationStatus',
       'separationType',
+      'separationReason',
+      'lastDayOfAttendance',
+      'lastDayOfAttendanceAcronym',
+      'dateOfDetermination',
       'sfdcContactId',
       'sfdcOpportunityId',
     ];

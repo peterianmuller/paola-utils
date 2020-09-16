@@ -3,20 +3,17 @@ const { google } = require('googleapis');
 
 const {
   getAllGroupMembers,
-  addGroupMember,
+  addStudentToGroup,
   removeGroupMember,
 } = require('.');
 
-const key = require('../../google/admin_sdk_client_secret.json');
-
 const scopes = ['https://www.googleapis.com/auth/admin.directory.group'];
-const jwt = new google.auth.JWT(key.client_email, null, key.private_key, scopes, 'paola@galvanize.com');
-
+const jwt = new google.auth.JWT(process.env.GOOGLE_ADMIN_CLIENT_EMAIL, null, process.env.GOOGLE_ADMIN_CLIENT_KEY, scopes, 'paola@galvanize.com');
 
 const GOOGLE_GROUP_ID = 'paola-sandbox@galvanize.com';
 const GOOGLE_GROUP_USER = 'paola@galvanize.com';
 
-const auth = async () => {
+const authenticate = async () => {
   await jwt.authorize((err, token) => {
     if (err) return err;
     return token;
@@ -27,14 +24,15 @@ const auth = async () => {
   );
 };
 
+// Clear out all group members before testing
 beforeAll(async () => {
-  const service = await auth();
-  const members = await service.members.list({
+  const service = await authenticate();
+  const response = await service.members.list({
     groupKey: GOOGLE_GROUP_ID,
   });
-  if (members.length) {
-    await members.forEach((user) => {
-      service.members.delete({
+  if (response.data.members && response.data.members.length) {
+    response.data.members.map(async (user) => {
+      await service.members.delete({
         groupKey: GOOGLE_GROUP_ID,
         memberKey: user.email,
       });
@@ -43,7 +41,7 @@ beforeAll(async () => {
 });
 
 const addUser = async () => {
-  const service = await auth();
+  const service = await authenticate();
   await service.members.insert({
     groupKey: GOOGLE_GROUP_ID,
     resource: { email: GOOGLE_GROUP_USER },
@@ -51,7 +49,7 @@ const addUser = async () => {
 };
 
 const removeUser = async () => {
-  const service = await auth();
+  const service = await authenticate();
   await service.members.delete({
     groupKey: GOOGLE_GROUP_ID,
     memberKey: GOOGLE_GROUP_USER,
@@ -64,9 +62,11 @@ describe('getAllGroupMembers', () => {
     expect(members).toHaveLength(0);
   });
   test('Should return an array of group members', async () => {
-    await addUser(GOOGLE_GROUP_ID, GOOGLE_GROUP_USER);
+    await addUser();
     const members = await getAllGroupMembers(GOOGLE_GROUP_ID);
     expect(members).toHaveLength(1);
+    expect(members[0]).toHaveProperty('email');
+    expect(members[0]).toHaveProperty('role');
   });
   test('Should return an error if group id does not exist', async () => {
     const members = await getAllGroupMembers('*****');
@@ -78,22 +78,22 @@ describe('getAllGroupMembers', () => {
   });
 });
 
-describe('addGroupMember', () => {
+describe('addStudentToGroup', () => {
   test('Should return true if user successfully is added', async () => {
-    await removeUser(GOOGLE_GROUP_ID, GOOGLE_GROUP_USER);
-    const response = await addGroupMember(GOOGLE_GROUP_ID, GOOGLE_GROUP_USER);
+    await removeUser();
+    const response = await addStudentToGroup(GOOGLE_GROUP_ID, GOOGLE_GROUP_USER);
     expect(response).toBe(true);
   });
   test('Should return an error if user is already in group', async () => {
-    const response = await addGroupMember(GOOGLE_GROUP_ID, GOOGLE_GROUP_USER);
+    const response = await addStudentToGroup(GOOGLE_GROUP_ID, GOOGLE_GROUP_USER);
     expect(response).toBe('Member already exists.');
   });
   test('Should return an error if user does not exist', async () => {
-    const response = await addGroupMember(GOOGLE_GROUP_ID, '****@gmail.com');
+    const response = await addStudentToGroup(GOOGLE_GROUP_ID, '****@gmail.com');
     expect(response).toContain('Resource Not Found');
   });
-  test('Should return an error if invalid key provided', async () => {
-    const response = await addGroupMember(GOOGLE_GROUP_ID, '****aabbcc');
+  test('Should return an error if invalid memberKey provided', async () => {
+    const response = await addStudentToGroup(GOOGLE_GROUP_ID, '****aabbcc');
     expect(response).toContain('Invalid Input: memberKey');
   });
 });
@@ -111,7 +111,7 @@ describe('removeGroupMember', () => {
     const response = await removeGroupMember(GOOGLE_GROUP_ID, '****@gmail.com');
     expect(response).toContain('Resource Not Found');
   });
-  test('Should return an error if invalid key provided', async () => {
+  test('Should return an error if invalid memberKey provided', async () => {
     const response = await removeGroupMember(GOOGLE_GROUP_ID, '****');
     expect(response).toBe('Missing required field: memberKey');
   });
