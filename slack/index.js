@@ -29,7 +29,7 @@ exports.sendMessageToChannel = async (channel, text) => {
       { method: 'POST', body: JSON.stringify(body), headers },
     );
     const json = await response.json();
-    return json.status;
+    return json;
   } catch (err) {
     return err;
   }
@@ -52,7 +52,7 @@ exports.getChannelHistory = async (channelID) => {
       `https://slack.com/api/conversations.history?token=${process.env.SLACK_TOKEN}&channel=${channelID}&limit=1000`,
       { method: 'GET', headers },
     );
-    return response;
+    return await response.json();
   } catch (err) {
     return err;
   }
@@ -89,6 +89,7 @@ async function deleteMessages(threadTs, messages) {
   const message = messages.shift();
 
   if (message.thread_ts !== threadTs) {
+    // eslint-disable-next-line no-use-before-define
     await fetchAndDeleteMessages(message.thread_ts, ''); // Fetching replies, it will delete main message as well.
   } else {
     const response = await get(apiConfig.deleteApiUrl + message.ts);
@@ -131,5 +132,5 @@ exports.clearChannel = (channelID) => {
   apiConfig.historyApiUrl = `${apiConfig.baseApiUrl}conversations.history?token=${token}&channel=${apiConfig.channel}&count=1000&cursor=`;
   apiConfig.deleteApiUrl = `${apiConfig.baseApiUrl}chat.delete?token=${process.env.SLACK_TOKEN_USER}&channel=${apiConfig.channel}&ts=`;
   apiConfig.repliesApiUrl = `${apiConfig.baseApiUrl}conversations.replies?token=${token}&channel=${apiConfig.channel}&ts=`;
-  fetchAndDeleteMessages(null, '');
+  return fetchAndDeleteMessages(null, '');
 };
