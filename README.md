@@ -68,3 +68,10 @@ const options = {
   ends_on: '2021-01-10', <-- not required but best practice
 };
 ```
+
+
+## Slack
+- We'll need to add two items to our .env file:
+- `SLACK_TOKEN` can be the bot token from our slack app
+- `SLACK_TOKEN_USER` will be the user token form slack app
+- More clear instructions on setting up a slack app and which scopes are needed will come in the near future. For now we can use the current  Paola-Staging app's bot token for `SLACK_TOKEN` and the current Paola-Staging app's user token for `SLACK_TOKEN_USER`
