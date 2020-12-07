@@ -1,19 +1,13 @@
 require('dotenv').config();
 
 const {
-  sendMessageToChannel, clearChannel,
+  sendMessageToChannel
 } = require('.');
-
-
-// Clear out all messages from #delete-messages-test-channel channel in the paola-sandbox workspace
-beforeAll(async () => {
-  await clearChannel('C01ER2NA0PR');
-});
 
 
 describe('sendMessageToChannel', () => {
   test('Should send a new message to the #delete-messages-test-channel as Paola', async () => {
-    const messageSent = await sendMessageToChannel('C01ER2NA0PR', 'hello');
+    const messageSent = await sendMessageToChannel('C01ER2NA0PR', 'please translate the last message with https://rot13.com/');
     expect(messageSent.ok).toEqual(true);
   });
 });

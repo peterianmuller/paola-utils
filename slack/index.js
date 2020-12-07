@@ -1,9 +1,5 @@
 const fetch = require('node-fetch');
-const https = require('https');
-
-const token = process.env.SLACK_TOKEN;
-let delay = 300;
-
+require('dotenv').config();
 
 // ------------------------------
 // Slack API Integrations (WIP)
@@ -15,7 +11,7 @@ let delay = 300;
 // Send a message to a channel
 exports.sendMessageToChannel = async (channel, text) => {
   const headers = {
-    Authorization: `Bearer ${process.env.SLACK_TOKEN}`,
+    Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
     'Content-Type': 'application/json; charset=utf-8',
   };
   const body = {
